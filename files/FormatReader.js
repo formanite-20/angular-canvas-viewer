@@ -56,7 +56,7 @@ FormatReader.prototype = {
 		that.options = options;
 		that.currentPage = -1;
 		that.rendering = false;
-		that.isZoom = false;
+        that.isZoom = !options.controls.disableZoom;
 		that.data = [];
 		that.triggerRefresh = false;
 		function renderPage(parent, pageNum, pageObj) {
