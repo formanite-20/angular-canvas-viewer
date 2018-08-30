@@ -19,26 +19,26 @@ angular.module('CanvasViewer', []).directive('canvasViewer', ['$window', '$http'
     // require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
     restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
     template: '<div class="viewer-container"><canvas class="viewer" ' +
-    'ng-mouseleave="canMove=false"' +
-    'ng-mousedown="mousedown($event)"' +
-    'ng-mouseup="mouseup($event)"' +
-    'ng-init="canMove=false"' +
-    'ng-mousemove="mousedrag($event,canMove)">' +
-    '</canvas>' +
-    '<div class="title" ng-if="title!=null">{{title}}</div>' +
-    '<div class="command" ng-if="options.controls.image">' +
-    '<div class="btn btn-info" title="Previous" ng-click="options.controls.numPage=options.controls.numPage-1" ng-hide="options.controls.totalPage==1"><i class="fa fa-minus"></i></div>' +
-    '<div class="btn btn-info" ng-hide="options.controls.totalPage==1">{{options.controls.numPage}}/{{options.controls.totalPage}}</div>' +
-    '<div class="btn btn-info" title="Next" ng-click="options.controls.numPage=options.controls.numPage+1" ng-hide="options.controls.totalPage==1"><i class="fa fa-plus"></i></div>' +
-    //'<div class="btn btn-info" title="Rotate left" ng-click="rotate(-1)" ng-hide="options.controls.disableRotate"><i class="fa fa-rotate-left"></i></div>' +
-    //'<div class="btn btn-info" title="Rotate right" ng-click="rotate(1)" ng-hide="options.controls.disableRotate"><i class="fa fa-rotate-right"></i></div>' +
-    //'<div class="btn btn-info" title="Zoom Out" ng-click="zoom(-1)" ng-hide="options.controls.disableZoom"><i class="fa fa-search-minus"></i></div>' +
-    '<div class="btn btn-info" title="Reset" ng-click="resizeTo(\'page\')"><i class="fa fa-circle-o-notch"></i></div>' +
-    //'<div class="btn btn-info" title="Zoom In" ng-click="zoom(1)" ng-hide="options.controls.disableZoom"><i class="fa fa-search-plus"></i></div></div>' +
-    '<div class="command" ng-if="options.controls.sound">' +
-    '<div class="btn btn-info" ng-click="stop()"><i class="fa fa-stop"></i></div>' +
-    '<div class="btn btn-info" ng-click="play()"><i class="fa fa-play"></i></div></div>' +
-    '</div>',
+      'ng-mouseleave="canMove=false"' +
+      'ng-mousedown="mousedown($event)"' +
+      'ng-mouseup="mouseup($event)"' +
+      'ng-init="canMove=false"' +
+      'ng-mousemove="mousedrag($event,canMove)">' +
+      '</canvas>' +
+      '<div class="title" ng-if="title!=null">{{title}}</div>' +
+      '<div class="command" ng-if="options.controls.image">' +
+      '<div class="btn btn-info" title="Previous" ng-click="options.controls.numPage=options.controls.numPage-1" ng-hide="options.controls.totalPage==1"><i class="fa fa-minus"></i></div>' +
+      '<div class="btn btn-info" ng-hide="options.controls.totalPage==1">{{options.controls.numPage}}/{{options.controls.totalPage}}</div>' +
+      '<div class="btn btn-info" title="Next" ng-click="options.controls.numPage=options.controls.numPage+1" ng-hide="options.controls.totalPage==1"><i class="fa fa-plus"></i></div>' +
+      //'<div class="btn btn-info" title="Rotate left" ng-click="rotate(-1)" ng-hide="options.controls.disableRotate"><i class="fa fa-rotate-left"></i></div>' +
+      //'<div class="btn btn-info" title="Rotate right" ng-click="rotate(1)" ng-hide="options.controls.disableRotate"><i class="fa fa-rotate-right"></i></div>' +
+      //'<div class="btn btn-info" title="Zoom Out" ng-click="zoom(-1)" ng-hide="options.controls.disableZoom"><i class="fa fa-search-minus"></i></div>' +
+      '<div class="btn btn-info" title="Reset" ng-click="resizeTo(\'page\')"><i class="fa fa-circle-o-notch"></i></div>' +
+      //'<div class="btn btn-info" title="Zoom In" ng-click="zoom(1)" ng-hide="options.controls.disableZoom"><i class="fa fa-search-plus"></i></div></div>' +
+      '<div class="command" ng-if="options.controls.sound">' +
+      '<div class="btn btn-info" ng-click="stop()"><i class="fa fa-stop"></i></div>' +
+      '<div class="btn btn-info" ng-click="play()"><i class="fa fa-play"></i></div></div>' +
+      '</div>',
     // templateUrl: '',
     // replace: true,
     // transclude: true,
@@ -180,8 +180,8 @@ angular.module('CanvasViewer', []).directive('canvasViewer', ['$window', '$http'
         if (scope.options.controls.numPage > scope.options.controls.totalPage) scope.options.controls.numPage = scope.options.controls.totalPage;
         if (reader != null) {
           if (scope.options.controls.filmStrip) {
-            // All pages are already rendered so go to correct page
-            picPos.y = (scope.options.controls.numPage - 1) * -(reader.height + 15);
+            let scaleResizeDiff = Math.abs(resize.height - reader.height * scope.options.zoom.value);
+            picPos.y = (scope.options.controls.numPage - 1) * -(reader.height * scope.options.zoom.value + scaleResizeDiff);
             applyTransform();
           } else {
             if (reader.refresh != null) {
@@ -197,22 +197,22 @@ angular.module('CanvasViewer', []).directive('canvasViewer', ['$window', '$http'
         // cross-browser wheel delta
         var event = $window.event || $event; // old IE support
         var delta = Math.max(-1, Math.min(1, (event.wheelDelta || -event.detail)));
-        if (scope.options.controls.filmStrip) {
-          picPos.y += 50 * delta;
-          // Limit range
-          if (picPos.y > 15) {
-            picPos.y = 15;
-          }
-          if (reader.images) {
-            if (picPos.y - reader.height * scope.options.zoom.value < -(reader.height + 15) * reader.images.length * scope.options.zoom.value) {
-              picPos.y = -(reader.height + 15) * reader.images.length + reader.height;
-            }
-          } else {
-            if (picPos.y - reader.height * scope.options.zoom.value < -reader.height * scope.options.zoom.value) {
-              picPos.y = -reader.height * scope.options.zoom.value;
-            }
-          }
-          //
+          if (scope.options.controls.filmStrip) {
+              picPos.y += 50 * delta;
+              // Limit range
+              if (picPos.y > 15) {
+                  picPos.y = 15;
+              }
+              if (reader.images) {
+                  if (picPos.y - reader.height * scope.options.zoom.value < -(reader.height + 15) * reader.images.length * scope.options.zoom.value) {
+                      picPos.y = -(resize.height + 15) * reader.images.length + resize.height;
+                  }
+              } else {
+                  if (picPos.y - reader.height * scope.options.zoom.value < -reader.height * scope.options.zoom.value) {
+                      picPos.y = -reader.height * scope.options.zoom.value;
+                  }
+              }
+
           scope.$applyAsync(function () {
             applyTransform();
           });
@@ -370,6 +370,7 @@ angular.module('CanvasViewer', []).directive('canvasViewer', ['$window', '$http'
           applyTransform();
           curPos.x = coordX;
           curPos.y = coordY;
+
         }
       });
 
