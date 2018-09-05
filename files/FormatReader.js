@@ -232,7 +232,7 @@ FormatReader.prototype = {
             // Set to correct page
             if (that.options.controls.filmStrip) {
                 that.images = [];
-                const staticDirectoryCount = that.tiff.countDirectory().valueOf();
+                var staticDirectoryCount = that.tiff.countDirectory().valueOf();
                 for(var p=0; p < staticDirectoryCount; p++){
                     that.tiff.setDirectory(p);
                     // Set only first page @TODO

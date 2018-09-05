@@ -180,7 +180,7 @@ angular.module('CanvasViewer', []).directive('canvasViewer', ['$window', '$http'
         if (scope.options.controls.numPage > scope.options.controls.totalPage) scope.options.controls.numPage = scope.options.controls.totalPage;
         if (reader != null) {
           if (scope.options.controls.filmStrip) {
-            let scaleResizeDiff = Math.abs(resize.height - reader.height * scope.options.zoom.value);
+            var scaleResizeDiff = Math.abs(resize.height - reader.height * scope.options.zoom.value);
             picPos.y = (scope.options.controls.numPage - 1) * -(reader.height * scope.options.zoom.value + scaleResizeDiff);
             applyTransform();
           } else {
