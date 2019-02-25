@@ -186,6 +186,7 @@ angular.module('CanvasViewer', []).directive('canvasViewer', ['$window', '$http'
           } else {
             if (reader.refresh != null) {
               reader.refresh();
+              scope.resizeTo(scope.options.controls.fit);
             }
           }
         }
