@@ -27,6 +27,14 @@ You need  `npm` package manager :
     # npm install
     # gulp dist
 
+## How to install it
+
+Add the following to your main module.ts file
+
+```
+import 'angular-canvas-viewer';
+```
+
 ## How to use it
 
  The directive usage is as follow ( CanvasViewer.min.worker.js must be in same folder that CanvasViewer.min.js but not in `script` tag ), `src` can be either a `string` or a `File` or `Blob` object :

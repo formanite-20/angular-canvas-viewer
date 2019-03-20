@@ -2,7 +2,7 @@
   "name": "angular-canvas-viewer",
   "version": "1.0.0",
   "description": "Viewer multi format directive",
-  "main": "gulpfile.js",
+  "main": "files/CanvasViewer.all.js",
   "dependencies": {
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
