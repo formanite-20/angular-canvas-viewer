@@ -4,10 +4,17 @@ var gulp = require('gulp')
 , uglify = require("gulp-uglify")
 , concat = require("gulp-concat")
 , deploy = require('gulp-gh-pages');
- 
+
+// this task works with a npm + webpack setup
+gulp.task('files', function () {
+  gulp.src(['./files/tiff.js', './files/pdf.js','./files/FormatReader.js','./files/CanvasViewer.js'])
+    .pipe(concat('CanvasViewer.all.js'))
+    .pipe(gulp.dest('./files'));
+});
 
 // task for js
-gulp.task('dist', function () {
+gulp.task('dist', ['files'], function () {
+
     gulp.src(['./assets/lib/libtiff/tiff.min.js', './assets/lib/pdfjs/pdf.compat.js', './assets/lib/pdfjs/pdf.js','./src/FormatReader.js','./src/CanvasViewer.js'])
     .pipe(uglify())
     .pipe(concat('CanvasViewer.all.min.js'))
